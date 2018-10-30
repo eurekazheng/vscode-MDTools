@@ -14,10 +14,12 @@ import TextEditor = vscode.TextEditor;
 
 var figlet = require('figlet');
 import us = require('underscore.string');
+import { removeAllListeners } from 'cluster';
 
 export function activate() {
 	console.log('Congratulations, your extension "TextTools" is now active!');
 	vscode.commands.registerCommand('extension.textFunctions', textFunctions);
+	vscode.commands.registerCommand('extension.removeLines', rmLines);
 }
 
 // String Functions Helper//////////////////////////////
@@ -40,6 +42,24 @@ function toLower(e: TextEditor, d: TextDocument, sel: Selection[]) {
 		}
 	});
 
+}
+
+function rmLines() {
+	let e = Window.activeTextEditor;
+	let d = e.document;
+	let sel = e.selections;
+	removeLines(e, d, sel);
+}
+
+function removeLines(e: TextEditor, d: TextDocument, sel: Selection[]) {
+	e.edit(function (edit) {
+		for (var x = 0; x < sel.length; x++) {
+			let txt: string = d.getText(new Range(sel[x].start, sel[x].end));
+			let pos = txt.search(/\S/);
+			txt = txt.substr(0, pos) + txt.substr(pos).replace(/(\s+)/gm, " ");
+			edit.replace(sel[x], txt);
+		}
+	});
 }
 
 // This function takes a callback function for the text formatting 'formatCB', 
@@ -90,6 +110,7 @@ function textFunctions() {
 	items.push({ label: "UnEscape HTML", description: "Convert [&lt;div&gt;hello] to [<div>hello]" });
 	items.push({ label: "Slugify", description: "Convert [txt for an URL] to [txt-for-an-url]" });
 	items.push({ label: "ASCII Art", description: "Convert [hello] to ASCII Art" });
+	items.push({ label: "Remove Lines", description: "Convert [a\\nbc] to [abc]"});
 
 	Window.showQuickPick(items).then((selection) => {
 		if (!selection) {
@@ -105,6 +126,9 @@ function textFunctions() {
 				break;
 			case "toLower":
 				toLower(e, d, sel);
+				break;
+			case "Remove Lines":
+				removeLines(e, d, sel);
 				break;
 			case "swapCase":
 				processSelection(e, d, sel, us.swapCase, []);

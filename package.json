@@ -1,13 +1,13 @@
 {
 	"name": "MDTools",
 	"description": "Text replacement functions e.g. change case, reverse and ASCII Art for all file types.",
-	"version": "1.0.1",
-	"publisher": "seanmcbreen",
-	"categories":[
+	"version": "1.0.3",
+	"publisher": "eurekazheng",
+	"categories": [
 		"Other"
 	],
-	"license":"SEE LICENSE IN LICENSE.txt",
-	"icon": "images/MDToolsIcon.svg",
+	"license": "SEE LICENSE IN LICENSE.txt",
+	"icon": "images/MDToolsIcon.jpg",
 	"bugs": {
 		"url": "https://github.com/Microsoft/vscode-MDTools/issues"
 	},
@@ -16,12 +16,13 @@
 		"type": "git",
 		"url": "https://github.com/Microsoft/vscode-MDTools.git"
 	},
-	"galleryBanner" : {
+	"galleryBanner": {
 		"color": "#5c2d91",
-		"theme" : "dark"
+		"theme": "dark"
 	},
 	"activationEvents": [
-		"onCommand:extension.textFunctions"
+		"onCommand:extension.textFunctions",
+		"onCommand:extension.removeLines"
 	],
 	"engines": {
 		"vscode": "^1.0.0"
@@ -33,26 +34,38 @@
 				"command": "extension.textFunctions",
 				"title": "Text Functions",
 				"description": "Text functions on selections"
+			},
+			{
+				"command": "extension.removeLines",
+				"title": "Remove Lines",
+				"description": "Remove lines on selections"
 			}
 		],
 		"keybindings": [
 			{
 				"command": "extension.textFunctions",
 				"key": "Alt+T"
+			},
+			{
+				"command": "extension.removeLines",
+				"key": "Cmd+R"
 			}
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "node ./node_modules/vscode/bin/compile",
-        "compile": "node ./node_modules/vscode/bin/compile -watch -p ./",
-        "postinstall": "node ./node_modules/vscode/bin/install"
+		"vscode:prepublish": "tsc -p ./",
+		"compile": "tsc -watch -p ./",
+		"postinstall": "node ./node_modules/vscode/bin/install"
 	},
 	"dependencies": {
 		"underscore.string": "^3.2.2",
 		"figlet": "^1.1.1"
 	},
 	"devDependencies": {
-		"vscode": "^0.11.0",
-		"typescript": "^1.8.5"
+		"vscode": "^1.0.0",
+		"typescript": "^2.0.3",
+		"mocha": "^2.3.3",
+		"@types/node": "^6.0.40",
+		"@types/mocha": "^2.2.32"
 	}
 }
